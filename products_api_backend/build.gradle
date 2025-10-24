@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.8'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'checkstyle'
 }
 
 group = 'com.example'
@@ -15,6 +16,22 @@ java {
 
 repositories {
 	mavenCentral()
+}
+
+checkstyle {
+	toolVersion = '10.17.0'
+	configFile = file('config/checkstyle/checkstyle.xml')
+	configProperties = [
+		'checkstyle.cache.file': "${buildDir}/checkstyle/cachefile"
+	]
+	ignoreFailures = true // don't fail CI on style issues
+}
+
+tasks.withType(Checkstyle).configureEach {
+	reports {
+		html.required = true
+		xml.required = false
+	}
 }
 
 dependencies {
